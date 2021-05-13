@@ -1,0 +1,75 @@
+Abstract
+We present a conceptually simple, flexible, and general
+framework for object instance segmentation. Our approach
+efficiently detects objects in an image while simultaneously
+generating a high-quality segmentation mask for each instance. The method, called Mask R-CNN, extends Faster
+R-CNN by adding a branch for predicting an object mask in
+parallel with the existing branch for bounding box recognition. Mask R-CNN is simple to train and adds only a small
+overhead to Faster R-CNN, running at 5 fps. Moreover,
+Mask R-CNN is easy to generalize to other tasks, e.g., allowing us to estimate human poses in the same framework.
+We show top results in all three tracks of the COCO suite of
+challenges, including instance segmentation, bounding-box
+object detection, and person keypoint detection. Without
+tricks, Mask R-CNN outperforms all existing, single-model
+entries on every task, including the COCO 2016 challenge
+winners. We hope our simple and effective approach will
+serve as a solid baseline and help ease future research in
+instance-level recognition. Code will be made available.
+
+我々は、概念的にシンプルで柔軟性があり、一般的なフレームワークである
+オブジェクトインスタンスのセグメンテーションのためのフレームワークを紹介します。このアプローチは
+画像中のオブジェクトを効率的に検出すると同時に
+高品質なセグメンテーションマスクを生成します。マスクR-CNNと呼ばれるこの手法は、Faster
+R-CNNを拡張し、既存のバウンディングボックス認識と並行して、オブジェクトマスクを予測するブランチを追加しました。
+この手法は、Faster R-CNNを拡張し、既存のバウンディングボックス認識と並行して、オブジェクトマスクを予測するブランチを追加したものです。Mask R-CNNの学習は簡単で、Faster R-CNNにわずかなオーバーヘッドを加えるだけです。
+Faster R-CNNのオーバーヘッドはわずかで、5 fpsで動作します。さらに。
+マスクR-CNNは、同じフレームワークで人間の姿勢を推定することができるなど、他のタスクに簡単に一般化することができます。
+COCOチャレンジシリーズの3つのトラックすべてでトップの結果を示しました。
+インスタンス・セグメンテーション、バウンディング・ボックス
+オブジェクト検出、人物のキーポイント検出などの課題があります。トリックなしで
+マスクR-CNNは、COCOを含むすべての課題において、既存の単一モデルの
+トリックなしで、Mask R-CNNは既存の単一モデルのエントリをすべてのタスクで上回り、COCO 2016チャレンジの受賞者を含む
+の受賞者です。私たちのシンプルで効果的なアプローチが
+このシンプルで効果的なアプローチが、確かなベースラインとなり、将来の
+インスタンスレベル認識の研究に役立つことを期待しています。コードは公開される予定です。
+
+§1
+The vision community has rapidly improved object detection and semantic segmentation results over a short period of time. In large part, these advances have been driven
+by powerful baseline systems, such as the Fast/Faster RCNN [9, 29] and Fully Convolutional Network (FCN) [24]
+frameworks for object detection and semantic segmentation, respectively. These methods are conceptually intuitive
+and offer flexibility and robustness, together with fast training and inference time. Our goal in this work is to develop a
+comparably enabling framework for instance segmentation.
+ Instance segmentation is challenging because it requires
+the correct detection of all objects in an image while also
+precisely segmenting each instance. It therefore combines
+elements from the classical computer vision tasks of object detection, where the goal is to classify individual objects and localize each using a bounding box, and semantic segmentation, where the goal is to classify each pixel into a fixed set of categories without differentiating object instances. Given this, one might expect a complex method
+is required to achieve good results. However, we show that
+a surprisingly simple, flexible, and fast system can surpass
+prior state-of-the-art instance segmentation results.
+ Our method, called Mask R-CNN, extends Faster R-CNN
+[29] by adding a branch for predicting segmentation masks
+on each Region of Interest (RoI), in parallel with the existing branch for classification and bounding box regression (Figure 1). The mask branch is a small FCN applied
+to each RoI, predicting a segmentation mask in a pixel-topixel manner. Mask R-CNN is simple to implement and
+train given the Faster R-CNN framework, which facilitates
+a wide range of flexible architecture designs. Additionally,
+the mask branch only adds a small computational overhead,
+enabling a fast system and rapid experimentation.
+
+ビジョン・コミュニティは、短期間のうちに物体検出とセマンティック・セグメンテーションの結果を急速に改善してきました。このような進歩の大部分は
+これらの進歩の大部分は，物体検出と意味分割のためのそれぞれのフレームワークであるFast/Faster RCNN [9, 29]やFully Convolutional Network (FCN) [24]などの強力なベースラインシステムによってもたらされました．
+などの強力なベースラインシステムによって推進されています.
+これらの手法は，概念的に直感的で，柔軟性とロバスト性に優れ，学習と推論の時間が短いという特徴があります．本研究の目的は
+インスタンス・セグメンテーションのフレームワークを開発することです。
+インスタンスのセグメンテーションが難しいのは
+画像内のすべてのオブジェクトを正確に検出すると同時に
+各インスタンスを正確にセグメント化する必要があるからです。そのため
+セマンティックセグメンテーションでは、オブジェクトのインスタンスを区別することなく、各ピクセルを一定のカテゴリーに分類することが目的です。このように考えると、良い結果を得るためには、複雑な手法が必要になると考えられます。
+このことから、良い結果を得るためには複雑な手法が必要であると考えられる。しかし、私たちは驚くほどシンプルで柔軟かつ高速なシステムが、これまでの最先端のインスタンス・セグメンテーションの結果を上回ることを示しています。
+マスクR-CNNと呼ばれる我々の手法は、Faster R-CNN
+マスクR-CNNと呼ばれる我々の手法は、Faster R-CNN[29]を拡張し、各関心領域(RoI)におけるセグメンテーション・マスク
+この手法は、Faster R-CNN[29]を拡張したもので、分類とバウンディングボックス回帰の既存のブランチと並行して、各関心領域（RoI）のセグメンテーションマスクを予測するブランチを追加しています（図1）。マスクブランチは、各RoIに適用される小さなFCN
+各RoIに適用され、ピクセル単位でセグメンテーションマスクを予測します。マスクR-CNNは、Faster R-CNNに比べて実装と学習が簡単です。
+Faster R-CNNフレームワークは、実装と学習が簡単で
+Faster R-CNNフレームワークは、幅広い柔軟なアーキテクチャ設計を可能にします。さらに。
+さらに、マスクブランチはわずかな計算オーバーヘッドしか追加しません。
+高速なシステムと迅速な実験を可能にしています。
