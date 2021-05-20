@@ -15,6 +15,9 @@
 \pagestyle{empty}
 \setlength{\headheight}{0truemm}
 \setlength{\parindent}{1zw}
+%\makeatletter
+%    \renewcommand{\@cite}[1]{textsuperscript{[#1]}}
+%\makeatother
 
 \begin{document}
 \twocolumn
@@ -39,7 +42,7 @@
 そしてこの時期から，将来取り組みたい分野を見つけるきっかけ作りとして，資格取得に向けて学習をはじめ，基本情報技術者・応用情報技術者を取得した．
 3年次には，KaggleやSIGNATEなどでデータサイエンスに興味を持ち，特にKaggleの胸部X線画像のカテーテルクラス分類コンペティションへの参加は医用画像工学に興味をもつきっかけとなった．
 ４年次の研究室配属では，脳型情報処理や人工知能を専門としている研究室に配属され，Vision Transformerを用いた画像解析の研究をしている．
-現在はKaggleのキャッサバの葉の病気を診断するコンペティションで，Vision Transformerモデルを使った実装をしており，
+現在はKaggleの植物の病気を診断するコンペティションで，Vision Transformerモデルを使った実装をしており，
 今後はモデルの評価をもとに改良を加えたり，他のモデルとの比較を行うつもりだ．
 
 \section{取り組みたい研究テーマ}
@@ -81,13 +84,10 @@ Mask R-CNNは同一クラスに属する物体をインスタンスごとにセ�
 \end{flushright}
 \vspace{2truemm}
 ]
-\begin{figure}[ht]%default85mm
-    \includegraphics[width=80mm]{/Users/markun/git/NAIST_essay/mask7.png}
-    \caption{マルチモーダルなセグメンテーションの流れ}
-\end{figure}
+
 \section{提案手法}
-私は二つの視点から医用画像を解析する手法 (図1) を提案する．一つ目は自然言語処理のSelf Attentionの
-視点{$^{\cite{vaswani2017attention}}$}．二つ目は画像処理のMask R-CNNの視点である．
+私は二つの視点から医用画像を解析する手法 (図1) を提案する．一つ目は自然言語処理のSelf Attention{$^{\cite{vaswani2017attention}}$}の
+視点．二つ目は画像処理のMask R-CNNの視点である．
 これらを組み合わせ，文章と画像双方からアプローチを行うことにより，病変の正確なセグメンテーションができると私は考える．
 
 図1はMask R-CNNのアーキテクチャの一部を抜粋し改変したものである．
@@ -96,10 +96,15 @@ Mask R-CNNは同一クラスに属する物体をインスタンスごとにセ�
 これにより得られたベクトルを特徴量として，CNNで得られた特徴量と組み合わせ，マルチモーダル特徴量として扱う．
 次はマルチモーダル特徴量を元にSelf Attentionを求める．
 図1の例では，入力文章として「右肺の中葉に結節の疑い」を与え，CNNによって得られた特徴量と組み合わせてSelf Attentionを求めている．
-この場合，入力文章のAttentionは「右肺」・「中葉」・「結節」などで大きくなり，「の」・「に」・「疑い」などで小さくなると考えられる．
+この場合，入力文章のAttentionは「右肺」・「中葉」・「結節」で大きくなり，「の」・「に」・「疑い」で小さくなると考えられる．
 以上により得られたAttentionを元の特徴量に掛け合わせて重み付きの特徴量を算出．
 次に，RPN{$^{\cite{ren2015faster}}$}によって得られた物体候補領域を重み付き特徴量と共にROI Alignに入力する，という流れだ．
 その後，通常のMask R-CNNと同様に，マスク推定ブランチと全結合層を経てセグメンテーションされた出力が得られる．
+\begin{figure}[hb]%default85mm
+    \centering\includegraphics[width=80mm]{/Users/markun/git/NAIST_essay/mask8.png}
+    \caption{マルチモーダルなセグメンテーションの流れ}
+\end{figure}
+\vspace{-1zh}
 \section{期待される結果}
 私が提案するSelf Attentionを用いた手法は，CNN単体で特徴量を抽出した場合に比べ，病気の場所や種類に関する情報を多く保持しているので，過剰抽出や欠損の少ない結果が安定して得られると考える．
 また，Attentionを求めていることから，画像・文章のどこに注目しているかを可視化できるので，患者に対する病症の説明も比較的容易になると予想される．
@@ -112,5 +117,10 @@ Mask R-CNNは同一クラスに属する物体をインスタンスごとにセ�
 {\scriptsize
 \bibliographystyle{jplain}
 \bibliography{/Users/markun/git/NAIST_essay/reference.bib}
+%\setcitestyle{super,open=[,close=]}%
+\makeatletter
+ \renewcommand{\@cite}[2]{\leavevmode%
+ \hbox{$^{\mbox{\the\scriptfont0 #1}}$}}
+\makeatother
 }
 \end{document}
